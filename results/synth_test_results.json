@@ -1,0 +1,94 @@
+{
+ "full": {
+  "count_mae": 276.0244,
+  "count_rmse": 381.3042,
+  "roi_mae": 69.8086,
+  "roi_rmse": 95.906,
+  "roi_mape": 0.6032,
+  "roi_mae_oracle_mask": 65.7653,
+  "window_miou": 0.8654,
+  "beh_acc": 0.9267,
+  "beh_macro_f1": 0.9235,
+  "confusion": [
+   [
+    73,
+    6,
+    1
+   ],
+   [
+    7,
+    90,
+    3
+   ],
+   [
+    0,
+    5,
+    115
+   ]
+  ],
+  "mean_gt_count": 2721.19,
+  "mean_gt_roi": 323.8367
+ },
+ "no_motion": {
+  "count_mae": 276.0244,
+  "count_rmse": 381.3042,
+  "roi_mae": 72.019,
+  "roi_rmse": 100.7949,
+  "roi_mape": 0.7212,
+  "roi_mae_oracle_mask": 65.7653,
+  "window_miou": 0.821,
+  "beh_acc": 0.5533,
+  "beh_macro_f1": 0.5192,
+  "confusion": [
+   [
+    36,
+    31,
+    13
+   ],
+   [
+    25,
+    31,
+    44
+   ],
+   [
+    6,
+    15,
+    99
+   ]
+  ],
+  "mean_gt_count": 2721.19,
+  "mean_gt_roi": 323.8367
+ },
+ "oracle_mask": {
+  "count_mae": 276.0244,
+  "count_rmse": 381.3042,
+  "roi_mae": 69.8086,
+  "roi_rmse": 95.906,
+  "roi_mape": 0.6032,
+  "roi_mae_oracle_mask": 65.7653,
+  "window_miou": 0.8654,
+  "beh_acc": 0.9167,
+  "beh_macro_f1": 0.9127,
+  "confusion": [
+   [
+    70,
+    9,
+    1
+   ],
+   [
+    6,
+    90,
+    4
+   ],
+   [
+    0,
+    5,
+    115
+   ]
+  ],
+  "mean_gt_count": 2721.19,
+  "mean_gt_roi": 323.8367
+ },
+ "baseline_density_only_acc": 0.59,
+ "baseline_gt_physics_acc": 0.8966666666666666
+}

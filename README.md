@@ -120,7 +120,50 @@ Design decisions and the reasoning behind them:
 
 ## 4. Results on synthetic data
 
-RESULTS_PLACEHOLDER
+Setup: 1500 / 150 / 300 clips (train / val / test, disjoint seeds, balanced classes),
+320×320, 8 frames at 3 fps. 14 epochs on a 4-core CPU (~3 min per epoch, no GPU).
+The checkpoint was selected on validation (epoch 9). All numbers below are on the
+**test** set (`eval_synth.py`), single seed.
+
+| Metric (test, n=300) | Full model | Motion removed at test | Oracle window mask |
+|---|---|---|---|
+| Total count MAE / RMSE (mean GT 2721) | 276 / 381 (≈10%) | 276 / 381 | 276 / 381 |
+| Window count MAE / RMSE (mean GT 324) | 69.8 / 95.9 | 72.0 / 100.8 | 65.8 (oracle) |
+| Window count mean relative error | 0.60 | 0.72 | — |
+| Window mIoU | **0.865** | 0.821 | — |
+| Behaviour accuracy / macro-F1 | **0.927 / 0.924** | 0.553 / 0.519 | 0.917 / 0.913 |
+| Baseline: GT window density only → state | 0.590 | | |
+| Baseline: GT physics (ρ, speed, dispersion, pressure) → state | 0.897 | | |
+
+Confusion matrix (full model; rows are true normal / congested / turbulent):
+`[[73,6,1],[7,90,3],[0,5,115]]`. Most errors are normal↔congested; turbulent is
+rarely missed (5 of 120).
+
+How to read this:
+* **Behaviour is motion-driven, not a density shortcut.** Removing motion at test
+  time drops accuracy from 92.7% to 55.3%, close to the 59% a density-only
+  classifier reaches. The full model beats a classifier given the *ground-truth*
+  physics summaries (89.7%), so it is using spatial motion structure beyond
+  4 scalar statistics.
+* **Window localisation transfers to stills on synthetic data** (mIoU 0.82 without
+  motion), because of the appearance cues learned under modality dropout.
+* **Counting is the weak point.** The oracle mask barely improves window MAE
+  (69.8 → 65.8), so the error is in density estimation, not in localisation. Heads
+  are 1–3 px at 320 px. The fix is higher input resolution (≥640 px, or tiled
+  inference) and/or density pre-training on JHU-Crowd++, not a better window head.
+  The mean relative error is inflated by clips with small windows (tens of people),
+  so read MAE alongside it.
+* Caveats: single seed, no confidence intervals, CPU-budget training. Before
+  publication, run ≥3 seeds and bootstrap the test set for CIs.
+
+**Zero-shot on the 4 real screenshots** (stills, so behaviour is not predicted):
+window IoU against the yellow-stroke masks is **0.09 / 0.00 / 0.02 / 0.30** (mean
+0.10), compared with 0.82 on synthetic stills. The window head fires on hoardings,
+lights and dense spectator patches, and misses the Lalbaug procession entirely.
+Predicted totals (4.5k, 8.7k, 0.8k, 0.7k) can't be scored without head
+annotations; the last two are visibly undercounted. **The synthetic-to-real
+appearance gap is large, and nothing here shows real-world efficacy yet**; see §5
+and §8.
 
 ## 5. Real data: what exists and what it can and can't validate
 
